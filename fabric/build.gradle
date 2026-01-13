@@ -114,6 +114,8 @@ dependencies {
 
     /* Immediately Fast */
     modCompileOnly "maven.modrinth:immediatelyfast:1.8.1+1.21.4-fabric"
+
+    modImplementation "curse.maven:physics-mod-442735:5982352"
 }
 
 processResources {
