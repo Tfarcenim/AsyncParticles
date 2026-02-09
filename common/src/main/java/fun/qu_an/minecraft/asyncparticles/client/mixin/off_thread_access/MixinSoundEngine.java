@@ -9,7 +9,7 @@ import net.minecraft.client.resources.sounds.SoundInstance;
 import net.minecraft.client.resources.sounds.TickableSoundInstance;
 import net.minecraft.client.sounds.SoundEngine;
 import net.minecraft.client.sounds.SoundEventListener;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundSource;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
@@ -62,7 +62,7 @@ public abstract class MixinSoundEngine {
 	public abstract void playDelayed(SoundInstance soundInstance, int i);
 
 	@Shadow
-	public abstract void stop(@Nullable ResourceLocation resourceLocation, @Nullable SoundSource soundSource);
+	public abstract void stop(@Nullable Identifier resourceLocation, @Nullable SoundSource soundSource);
 
 	@Shadow
 	public abstract void stop(SoundInstance soundInstance);
@@ -175,8 +175,8 @@ public abstract class MixinSoundEngine {
 		}
 	}
 
-	@Inject(method = "stop(Lnet/minecraft/resources/ResourceLocation;Lnet/minecraft/sounds/SoundSource;)V", at = @At("HEAD"), cancellable = true)
-	public void injectStop(ResourceLocation soundName, SoundSource category, CallbackInfo ci) {
+	@Inject(method = "stop(Lnet/minecraft/resources/Identifier;Lnet/minecraft/sounds/SoundSource;)V", at = @At("HEAD"), cancellable = true)
+	public void injectStop(Identifier soundName, SoundSource category, CallbackInfo ci) {
 		if (ThreadUtil.isOnParticleThread()) {
 			ci.cancel();
 			ThreadUtil.enqueueClientTask(() -> this.stop(soundName, category));

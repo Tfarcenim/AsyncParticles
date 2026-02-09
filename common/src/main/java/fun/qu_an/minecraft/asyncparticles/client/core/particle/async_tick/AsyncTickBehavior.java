@@ -3,6 +3,7 @@ package fun.qu_an.minecraft.asyncparticles.client.core.particle.async_tick;
 import fun.qu_an.minecraft.asyncparticles.client.addon.ParticleAddon;
 import fun.qu_an.minecraft.asyncparticles.client.addon.ParticleGroupAddition;
 import fun.qu_an.minecraft.asyncparticles.client.config.ConfigHelper;
+import fun.qu_an.minecraft.asyncparticles.client.core.particle.async_render.AsyncRenderBehavior;
 import fun.qu_an.minecraft.asyncparticles.client.core.particle.async_render.AsyncRendererThread;
 import fun.qu_an.minecraft.asyncparticles.client.util.ExceptionTracker;
 import fun.qu_an.minecraft.asyncparticles.client.util.ExceptionUtil;
@@ -11,7 +12,6 @@ import fun.qu_an.minecraft.asyncparticles.client.util.ThreadUtil;
 import net.minecraft.CrashReport;
 import net.minecraft.CrashReportCategory;
 import net.minecraft.ReportedException;
-import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.*;
 import net.minecraft.util.Mth;
@@ -37,7 +37,7 @@ public class AsyncTickBehavior {
 			forkJoinWorkerThread.setName(THREAD_PREFIX + "-" + workerCount.getAndIncrement());
 			forkJoinWorkerThread.setDaemon(true);
 			return forkJoinWorkerThread;
-		}, Util::onThreadException, true);
+		}, AsyncRenderBehavior::onThreadException, true);
 	}
 
 	private static final ExceptionTracker<Object> EXCEPTION_TRACKER = new ExceptionTracker<>(

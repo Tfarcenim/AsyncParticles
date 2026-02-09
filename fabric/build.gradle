@@ -51,18 +51,18 @@ dependencies {
 //    modLocalRuntime("io.wispforest:owo-lib:0.12.21+1.21.6") {
 //        exclude(group: "net.fabricmc.fabric-api")
 //    }
-    modCompileOnly 'maven.modrinth:modmenu:16.0.0-rc.1'
-    modLocalRuntime 'maven.modrinth:modmenu:16.0.0-rc.1'
+    modCompileOnly 'maven.modrinth:modmenu:17.0.0-beta.2'
+    modLocalRuntime 'maven.modrinth:modmenu:17.0.0-beta.2'
     modLocalRuntime 'maven.modrinth:fabric-permissions-api:0.4.0'
     modLocalRuntime("me.fallenbreath:conditional-mixin-fabric:0.6.4")
 
     /* Performance */
-    modCompileOnly "maven.modrinth:sodium:mc1.21.10-0.7.2-fabric"
-    modCompileOnly 'maven.modrinth:iris:1.9.6+1.21.10-fabric'
-    modCompileOnly 'maven.modrinth:sodium-extra:mc1.21.9-0.7.0+fabric'
-    modLocalRuntime "maven.modrinth:sodium:mc1.21.10-0.7.2-fabric"
-    modLocalRuntime 'maven.modrinth:sodium-extra:mc1.21.9-0.7.0+fabric'
-    modLocalRuntime 'maven.modrinth:iris:1.9.6+1.21.10-fabric'
+    modCompileOnly "maven.modrinth:sodium:mc1.21.11-0.8.4-fabric"
+    modCompileOnly 'maven.modrinth:iris:1.10.5+1.21.11-fabric'
+    modCompileOnly 'maven.modrinth:sodium-extra:mc1.21.11-0.8.0+fabric'
+    modLocalRuntime "maven.modrinth:sodium:mc1.21.11-0.8.4-fabric"
+    modLocalRuntime 'maven.modrinth:sodium-extra:mc1.21.11-0.8.0+fabric'
+    modLocalRuntime 'maven.modrinth:iris:1.10.5+1.21.11-fabric'
     localRuntime "org.antlr:antlr4-runtime:4.13.1"
     localRuntime "io.github.douira:glsl-transformer:3.0.0-pre3"
     localRuntime "org.anarres:jcpp:1.4.14"

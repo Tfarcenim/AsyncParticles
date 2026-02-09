@@ -1,13 +1,16 @@
 package fun.qu_an.minecraft.asyncparticles.client.core.particle.async_render;
 
+import fun.qu_an.minecraft.asyncparticles.client.AsyncParticlesClient;
 import fun.qu_an.minecraft.asyncparticles.client.config.ConfigHelper;
 import fun.qu_an.minecraft.asyncparticles.client.util.ExceptionTracker;
 import fun.qu_an.minecraft.asyncparticles.client.util.ExceptionUtil;
 import net.minecraft.CrashReport;
 import net.minecraft.CrashReportCategory;
+import net.minecraft.ReportType;
 import net.minecraft.ReportedException;
-import net.minecraft.Util;
+import net.minecraft.server.Bootstrap;
 import net.minecraft.util.Mth;
+import net.minecraft.util.Util;
 import net.minecraft.world.level.chunk.MissingPaletteEntryException;
 import org.jetbrains.annotations.NotNull;
 
@@ -16,6 +19,7 @@ import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
 import java.util.List;
+import java.util.concurrent.CompletionException;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.ForkJoinTask;
 import java.util.concurrent.ForkJoinWorkerThread;
@@ -35,8 +39,23 @@ public class AsyncRenderBehavior {
 			forkJoinWorkerThread.setName(THREAD_PREFIX + "-" + workerCount.getAndIncrement());
 			forkJoinWorkerThread.setDaemon(true);
 			return forkJoinWorkerThread;
-		}, Util::onThreadException, true);
+		}, AsyncRenderBehavior::onThreadException, true);
 	}
+
+	public static void onThreadException(Thread thread, Throwable throwable) {
+		Util.pauseInIde(throwable);
+		if (throwable instanceof CompletionException) {
+			throwable = throwable.getCause();
+		}
+
+		if (throwable instanceof ReportedException reportedException) {
+			Bootstrap.realStdoutPrintln(reportedException.getReport().getFriendlyReport(ReportType.CRASH));
+			System.exit(-1);
+		}
+
+		//LOGGER.error("Caught exception in thread {}", thread, throwable);
+	}
+
 
 	private static final ExceptionTracker<Object> EXCEPTION_TRACKER = new ExceptionTracker<>(
 		() -> 5000,
