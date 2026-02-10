@@ -39,21 +39,7 @@ public class AsyncRenderBehavior {
 			forkJoinWorkerThread.setName(THREAD_PREFIX + "-" + workerCount.getAndIncrement());
 			forkJoinWorkerThread.setDaemon(true);
 			return forkJoinWorkerThread;
-		}, AsyncRenderBehavior::onThreadException, true);
-	}
-
-	public static void onThreadException(Thread thread, Throwable throwable) {
-		Util.pauseInIde(throwable);
-		if (throwable instanceof CompletionException) {
-			throwable = throwable.getCause();
-		}
-
-		if (throwable instanceof ReportedException reportedException) {
-			Bootstrap.realStdoutPrintln(reportedException.getReport().getFriendlyReport(ReportType.CRASH));
-			System.exit(-1);
-		}
-
-		//LOGGER.error("Caught exception in thread {}", thread, throwable);
+		}, Util::onThreadException, true);
 	}
 
 

@@ -15,6 +15,7 @@ import net.minecraft.ReportedException;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.*;
 import net.minecraft.util.Mth;
+import net.minecraft.util.Util;
 import net.minecraft.world.level.chunk.MissingPaletteEntryException;
 import org.jetbrains.annotations.NotNull;
 
@@ -37,7 +38,7 @@ public class AsyncTickBehavior {
 			forkJoinWorkerThread.setName(THREAD_PREFIX + "-" + workerCount.getAndIncrement());
 			forkJoinWorkerThread.setDaemon(true);
 			return forkJoinWorkerThread;
-		}, AsyncRenderBehavior::onThreadException, true);
+		}, Util::onThreadException, true);
 	}
 
 	private static final ExceptionTracker<Object> EXCEPTION_TRACKER = new ExceptionTracker<>(

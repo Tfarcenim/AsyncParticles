@@ -16,7 +16,6 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
@@ -40,8 +39,7 @@ public abstract class MixinSoundEngine {
 	@Shadow
 	public abstract void destroy();
 
-	@Shadow
-	public abstract void updateCategoryVolume(SoundSource soundSource);
+
 
 	@Shadow
 	public abstract SoundEngine.PlayResult play(SoundInstance soundInstance);
@@ -68,13 +66,12 @@ public abstract class MixinSoundEngine {
 	public abstract void stop(SoundInstance soundInstance);
 
 	@Shadow
-	public abstract void setVolume(SoundInstance soundInstance, float f);
-
-	@Shadow
 	public abstract void pauseAllExcept(SoundSource... soundSources);
 
 	@Shadow
 	public abstract void updateSource(Camera camera);
+
+	@Shadow public abstract void updateCategoryVolume(SoundSource soundSource, float f);
 
 	@Inject(method = "tick", at = @At("HEAD"))
 	public void injectTick(CallbackInfo ci) {
@@ -114,10 +111,10 @@ public abstract class MixinSoundEngine {
 	}
 
 	@Inject(method = "updateCategoryVolume", at = @At("HEAD"), cancellable = true)
-	public void injectUpdateCategoryVolume(SoundSource soundSource, CallbackInfo ci) {
+	public void injectUpdateCategoryVolume(SoundSource soundSource, float f, CallbackInfo ci) {
 		if (ThreadUtil.isOnParticleThread()) {
 			ci.cancel();
-			ThreadUtil.enqueueClientTask(() -> this.updateCategoryVolume(soundSource));
+			ThreadUtil.enqueueClientTask(() -> this.updateCategoryVolume(soundSource,f));
 		}
 	}
 
@@ -188,14 +185,6 @@ public abstract class MixinSoundEngine {
 		if (ThreadUtil.isOnParticleThread()) {
 			ci.cancel();
 			ThreadUtil.enqueueClientTask(() -> this.stop(soundInstance));
-		}
-	}
-
-	@Inject(method = "setVolume", at = @At("HEAD"), cancellable = true)
-	public void injectSetVolume(SoundInstance soundInstance, float f, CallbackInfo ci) {
-		if (ThreadUtil.isOnParticleThread()) {
-			ci.cancel();
-			ThreadUtil.enqueueClientTask(() -> this.setVolume(soundInstance, f));
 		}
 	}
 
